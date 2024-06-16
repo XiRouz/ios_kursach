@@ -20,25 +20,33 @@ struct GrowingButton: ButtonStyle {
 }
 
 struct ContentView: View {
-    // restAPI.setUsername(username: "user1")
-    // restAPI.setUrl(url: "http://192.168.0.111:10050/")
+    @ObservedObject var restAPI : PPTXRestAPI
     
-    var restAPI = PPTXRestAPI(url: "http://192.168.0.111:10050",
-                              username: "user1")
-    restAPI.setUsername(username: "user2")
+    var feedback = ""
+    
+    let queue = DispatchQueue.global(qos: .background)
+    
+    var hbTimer: Timer?
+    
+//    @State var errFeedback: String = "-"
+    
+    init() {
+        restAPI = PPTXRestAPI(url: "http://192.168.0.111:10050",
+                                  username: "user1")
+        // restAPI.setUsername(username: "user1")
+        // restAPI.setUrl(url: "http://192.168.0.111:10050/")
+        
+//        errFeedback = restAPI.errFeedback ?? "--"
+    }
     
     var body: some View {
-        Text("Hello, stupid laggy world!")
-            .padding()
         HStack(){
             Button("PrevSlide") {
                 print("smth")
+                restAPI.setUsername(un: "user2")
             }
             .buttonStyle(GrowingButton())
             //.controlSize(.large)
-            Button("HB") {
-                print(restAPI.hb())
-            }
             .buttonStyle(GrowingButton())
             //.controlSize(.large)
             Button("NextSlide") {
@@ -46,6 +54,10 @@ struct ContentView: View {
             }
             .buttonStyle(GrowingButton())
             //.controlSize(.large)
+        }
+        HStack() {
+            Text(restAPI.errFeedback)
+                .padding()
         }
     }
 }

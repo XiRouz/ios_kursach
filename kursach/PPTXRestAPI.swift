@@ -11,20 +11,16 @@ struct Message : Decodable {
     let message: String
 }
 
-class PPTXRestAPI {
-    private var _username: String?
-    var username: String? {
-        get {
-            return _username
-        }
-        set {
-            _username = newValue
-        }
-    }
+class PPTXRestAPI : ObservableObject {
+    var username: String?
     var url: String?
+    @Published var errFeedback: String = "init"
     
-    func setUsername(username: String) -> Void {
-        self.username = username
+    var queue = DispatchQueue.global(qos: .background)
+    var hbTimer: Timer?
+    
+    func setUsername(un: String) -> Void {
+        self.username = un
         return
     }
     
@@ -36,6 +32,29 @@ class PPTXRestAPI {
     init(url: String, username: String) {
         self.username = username
         self.url = url
+        
+        hbTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { hbTimer in
+            let hbResult = self.hb()
+            print("hbResult:")
+            print(hbResult)
+            
+            switch hbResult {
+            case "Active":
+                self.errFeedback = "Green"
+            case "Not active":
+                self.errFeedback = "Yellow"
+            case ("Presenter not found"):
+                self.errFeedback = "Red"
+            default:
+                self.errFeedback = "Black"
+            }
+            print(self.errFeedback)
+        }
+        
+        self.queue.async {
+            RunLoop.current.add(self.hbTimer!, forMode: RunLoop.Mode.default)
+            RunLoop.current.run()
+        }
     }
     
     func sendRequest(url: URL) -> String? {
@@ -46,10 +65,10 @@ class PPTXRestAPI {
                 print(error as Any)
                 return
             }
-            print("data:")
-            print(data)
-            print("response:")
-            print(response!)
+//            print("data:")
+//            print(data)
+//            print("response:")
+//            print(response!)
             
             do {
 //                let resp = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
@@ -65,6 +84,7 @@ class PPTXRestAPI {
             }
         }
         task.resume()
+        print("return result")
         return result
         
     }
@@ -78,7 +98,10 @@ class PPTXRestAPI {
         }
         
         guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/hb")) else { return "ERR HB URL" };
-        return sendRequest(url: hbUrl) ?? "ERR HB RESULT"
+        let requestResult = sendRequest(url: hbUrl) ?? "ERR HB RESULT"
+        print("reqRes")
+        print(requestResult)
+        return requestResult
     }
     
     func prev() -> String {

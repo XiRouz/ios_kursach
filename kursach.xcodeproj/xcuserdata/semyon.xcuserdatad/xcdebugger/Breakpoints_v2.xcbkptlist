@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "59D29E6B-64C5-494D-9B4C-C1B20BBAA1D8"
-            shouldBeEnabled = "No"
+            uuid = "F8C23BD1-CFAD-4E4B-ADD3-D408DD404212"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "kursach/PPTXRestAPI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "sendRequest(url:)"
             landmarkType = "7">
          </BreakpointContent>
