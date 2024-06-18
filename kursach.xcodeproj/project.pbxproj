@@ -13,8 +13,8 @@
 		54087C7B2C1547D1002A0DF3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54087C7A2C1547D1002A0DF3 /* Preview Assets.xcassets */; };
 		54087C862C1547D2002A0DF3 /* kursachTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54087C852C1547D2002A0DF3 /* kursachTests.swift */; };
 		54087C912C1547D2002A0DF3 /* kursachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54087C902C1547D2002A0DF3 /* kursachUITests.swift */; };
+		543E73002C20E7D600230C6C /* DefaultsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543E72FF2C20E7D600230C6C /* DefaultsHandler.swift */; };
 		544618D02C1A448100978762 /* PPTXRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544618CF2C1A448100978762 /* PPTXRestAPI.swift */; };
-		544891562C1B522D001BDFB9 /* RestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544891552C1B522D001BDFB9 /* RestAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,8 +47,8 @@
 		54087C8C2C1547D2002A0DF3 /* kursachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = kursachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		54087C902C1547D2002A0DF3 /* kursachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kursachUITests.swift; sourceTree = "<group>"; };
 		54087C922C1547D2002A0DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		543E72FF2C20E7D600230C6C /* DefaultsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsHandler.swift; sourceTree = "<group>"; };
 		544618CF2C1A448100978762 /* PPTXRestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PPTXRestAPI.swift; sourceTree = "<group>"; };
-		544891552C1B522D001BDFB9 /* RestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestAPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +105,7 @@
 				54087C7C2C1547D1002A0DF3 /* Info.plist */,
 				54087C792C1547D1002A0DF3 /* Preview Content */,
 				544618CF2C1A448100978762 /* PPTXRestAPI.swift */,
-				544891552C1B522D001BDFB9 /* RestAPI.swift */,
+				543E72FF2C20E7D600230C6C /* DefaultsHandler.swift */,
 			);
 			path = kursach;
 			sourceTree = "<group>";
@@ -265,9 +265,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				544891562C1B522D001BDFB9 /* RestAPI.swift in Sources */,
 				544618D02C1A448100978762 /* PPTXRestAPI.swift in Sources */,
 				54087C762C1547D0002A0DF3 /* ContentView.swift in Sources */,
+				543E73002C20E7D600230C6C /* DefaultsHandler.swift in Sources */,
 				54087C742C1547D0002A0DF3 /* kursachApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

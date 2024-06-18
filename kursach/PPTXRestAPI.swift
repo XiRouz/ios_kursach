@@ -15,12 +15,13 @@ class PPTXRestAPI : ObservableObject {
     var username: String?
     var url: String?
     @Published var errFeedback: String = "init"
+    var hbFeedback: String = "init"
     
     var queue = DispatchQueue.global(qos: .background)
     var hbTimer: Timer?
     
-    func setUsername(un: String) -> Void {
-        self.username = un
+    func setUsername(username: String) -> Void {
+        self.username = username
         return
     }
     
@@ -34,21 +35,7 @@ class PPTXRestAPI : ObservableObject {
         self.url = url
         
         hbTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { hbTimer in
-            let hbResult = self.hb()
-            print("hbResult:")
-            print(hbResult)
-            
-            switch hbResult {
-            case "Active":
-                self.errFeedback = "Green"
-            case "Not active":
-                self.errFeedback = "Yellow"
-            case ("Presenter not found"):
-                self.errFeedback = "Red"
-            default:
-                self.errFeedback = "Black"
-            }
-            print(self.errFeedback)
+            self.hb()
         }
         
         self.queue.async {
@@ -57,74 +44,115 @@ class PPTXRestAPI : ObservableObject {
         }
     }
     
-    func sendRequest(url: URL) -> String? {
-        var result = ""
+    func sendRequest(url: URL, completion: @escaping(String) -> Void) {
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
-                print(error as Any)
+            guard
+                let data = data
+//                let string = String(data: data, encoding: .utf8),
+//                let dictionary = (text: string),
+//                let message = dictionary["message"] as? String
+            else {
+                print("err")
+                print(error)
+//                DispatchQueue.main.async {
+//                    completion(.failure(error ?? URLError(.badServerResponse)))
+//                }
                 return
             }
-//            print("data:")
-//            print(data)
-//            print("response:")
-//            print(response!)
-            
             do {
-//                let resp = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
                 let resp = try JSONDecoder().decode(Message.self, from: data)
                 print("resp:")
                 print(resp.message)
-                result = resp.message
+                DispatchQueue.main.async {
+//                    completion(.success(resp))
+                    completion(resp.message)
+                }
             }
             catch {
                 print("error:")
                 print(error)
-                result = "ERR REQUEST"
             }
         }
         task.resume()
-        print("return result")
-        return result
-        
     }
     
-    func hb() -> String {
+    func hb() -> Void {
         if self.url == nil {
-            return "url not set"
+            print("url not set")
+            return
         }
         if self.username == nil {
-            return "username not set"
+            print("username not set")
+            return
         }
         
-        guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/hb")) else { return "ERR HB URL" };
-        let requestResult = sendRequest(url: hbUrl) ?? "ERR HB RESULT"
-        print("reqRes")
-        print(requestResult)
-        return requestResult
+        guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/hb")) else
+        {
+            print("ERR HB URL")
+            return
+        };
+        var requestWentThrough = false
+        sendRequest(url: hbUrl) { result in
+            print("reqRes")
+            print(result)
+            requestWentThrough = true
+            switch result {
+            case "Active":
+                self.errFeedback = "You are active presenter!"
+            case "Not active":
+                self.errFeedback = "You are not active presenter"
+            case "Presenter not found":
+                self.errFeedback = "You are connected, but user not found"
+            default:
+                self.errFeedback = "You are not connected"
+            }
+        }
+        if !requestWentThrough {
+            self.errFeedback = "You are not connected"
+        }
+        return
+    }
+    func prev() -> Void {
+        if self.url == nil {
+            print("url not set")
+            return
+        }
+        if self.username == nil {
+            print("username not set")
+            return
+        }
+        guard let prevUrl = URL(string: (self.url! + "/" + self.username! + "/prev"))
+        else {
+            print("ERR PREV")
+            return
+        };
+        sendRequest(url: prevUrl) { result in
+            print("prev result:")
+            print(result)
+        }
     }
     
-    func prev() -> String {
+    func next() -> Void {
         if self.url == nil {
-            return "url not set"
+            print("url not set")
+            return
         }
         if self.username == nil {
-            return "username not set"
+            print("username not set")
+            return
         }
-        
-        guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/prev")) else { return "ERR PREV" };
-        return sendRequest(url: hbUrl) ?? "ERR_PREV"
+        guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/next"))
+        else {
+            print("ERR NEXT")
+            return
+        };
+        sendRequest(url: hbUrl) { result in
+            print("next result:")
+            print(result)
+        }
     }
     
-    func next() -> String {
-        if self.url == nil {
-            return "url not set"
-        }
-        if self.username == nil {
-            return "username not set"
-        }
-        
-        guard let hbUrl = URL(string: (self.url! + "/" + self.username! + "/next")) else { return "ERR NEXT" };
-        return sendRequest(url: hbUrl) ?? "ERR_PREV"
-    }
 }
+    
+

@@ -22,31 +22,40 @@ struct GrowingButton: ButtonStyle {
 struct ContentView: View {
     @ObservedObject var restAPI : PPTXRestAPI
     
-    var feedback = ""
-    
-    let queue = DispatchQueue.global(qos: .background)
-    
-    var hbTimer: Timer?
-    
-//    @State var errFeedback: String = "-"
+    @State var urlInput = DefaultsHandler.getUrl()
+    @State var usernameInput = DefaultsHandler.getUsername()
     
     init() {
-        restAPI = PPTXRestAPI(url: "http://192.168.0.111:10050",
-                                  username: "user1")
-        // restAPI.setUsername(username: "user1")
-        // restAPI.setUrl(url: "http://192.168.0.111:10050/")
-        
-//        errFeedback = restAPI.errFeedback ?? "--"
+        restAPI = PPTXRestAPI(
+            url: DefaultsHandler.getUrl(),
+            username: DefaultsHandler.getUsername()
+        )
     }
     
     var body: some View {
+        VStack(){
+            TextField(
+                "URL",
+                text: $urlInput,
+                onCommit: {
+                    restAPI.setUrl(url: urlInput)
+                    DefaultsHandler.setUrl(value: urlInput)
+                }
+            ).padding()
+            TextField(
+                "Username",
+                text: $usernameInput,
+                onCommit: {
+                    restAPI.setUsername(username: usernameInput)
+                    DefaultsHandler.setUsername(value: usernameInput)
+                }
+            ).padding()
+        }
+        .padding([.bottom], 30)
         HStack(){
             Button("PrevSlide") {
-                print("smth")
-                restAPI.setUsername(un: "user2")
+                print(restAPI.prev())
             }
-            .buttonStyle(GrowingButton())
-            //.controlSize(.large)
             .buttonStyle(GrowingButton())
             //.controlSize(.large)
             Button("NextSlide") {
