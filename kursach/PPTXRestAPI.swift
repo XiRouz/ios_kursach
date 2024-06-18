@@ -14,8 +14,7 @@ struct Message : Decodable {
 class PPTXRestAPI : ObservableObject {
     var username: String?
     var url: String?
-    @Published var errFeedback: String = "init"
-    var hbFeedback: String = "init"
+    @Published var hbFeedback: String = "Waiting for connection..."
     
     var queue = DispatchQueue.global(qos: .background)
     var hbTimer: Timer?
@@ -99,17 +98,17 @@ class PPTXRestAPI : ObservableObject {
             requestWentThrough = true
             switch result {
             case "Active":
-                self.errFeedback = "You are active presenter!"
+                self.hbFeedback = "You are active presenter!"
             case "Not active":
-                self.errFeedback = "You are not active presenter"
+                self.hbFeedback = "You are not active presenter"
             case "Presenter not found":
-                self.errFeedback = "You are connected, but user not found"
+                self.hbFeedback = "You are connected, but user not found"
             default:
-                self.errFeedback = "You are not connected"
+                self.hbFeedback = "You are not connected"
             }
         }
         if !requestWentThrough {
-            self.errFeedback = "You are not connected"
+            self.hbFeedback = "You are not connected"
         }
         return
     }

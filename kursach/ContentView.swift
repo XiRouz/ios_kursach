@@ -41,7 +41,10 @@ struct ContentView: View {
                     restAPI.setUrl(url: urlInput)
                     DefaultsHandler.setUrl(value: urlInput)
                 }
-            ).padding()
+            )
+            .padding()
+            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
+            .padding()
             TextField(
                 "Username",
                 text: $usernameInput,
@@ -49,23 +52,28 @@ struct ContentView: View {
                     restAPI.setUsername(username: usernameInput)
                     DefaultsHandler.setUsername(value: usernameInput)
                 }
-            ).padding()
+            )
+            .padding()
+            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
+            .padding()
         }
-        .padding([.bottom], 30)
+//        .padding([.leading], 30)
+        .padding([.bottom], 70)
         HStack(){
             Button("PrevSlide") {
                 print(restAPI.prev())
             }
             .buttonStyle(GrowingButton())
-            //.controlSize(.large)
+            .padding()
+
             Button("NextSlide") {
                 print(restAPI.next())
             }
             .buttonStyle(GrowingButton())
-            //.controlSize(.large)
+            .padding()
         }
         HStack() {
-            Text(restAPI.errFeedback)
+            Text(restAPI.hbFeedback)
                 .padding()
         }
     }
